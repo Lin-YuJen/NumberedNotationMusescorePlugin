@@ -4,7 +4,7 @@ import QtQuick 2.9
 MuseScore {
     property string pname: "Add (solfege numbers) as lyrics: (篠笛)"
     menuPath: "Plugins." + pname
-    version: "20230517A";
+    version: "20250621";
     thumbnailName: "solfege_number.png";
     title: "Add (solfege numbers) as lyrics: (篠笛)"
     description: "This plugin will convert solfege names to numbers: \
@@ -69,11 +69,11 @@ MuseScore {
         const basicNumber = solfaArray[note.tpc1 - key + 1 + 7]; //+1 tpc starts at -1
         const octave = Math.floor(note.pitch / 12);
         // octave < 6 => 呂音
-        if (octave < 6) return convertNotationToKanji(basicNumber);
+        if (octave < 6) return '\n' + convertNotationToKanji(basicNumber);
         // octave > 6 => 大甲音
-        else if (octave > 6) return basicNumber + ".";
+        else if (octave > 6) return addPointOnTheTopOfNumber(basicNumber)
         // octave == 6 => 甲音
-        else return basicNumber;
+        else return '\n' + basicNumber;
     }
 
     function convertNotationToKanji(notation) {
@@ -101,6 +101,14 @@ MuseScore {
             '♯7': '♯七'
         };
         return notationMap[notation] || notation;
+    }
+
+    function addPointOnTheTopOfNumber(notation){
+        if (notation.length === 1) {
+            return '.\n' + notation;
+        } else {
+            return ' .\n' + notation;
+        }
     }
 
     function buildMeasureMap(score) {
